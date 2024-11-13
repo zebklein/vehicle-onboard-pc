@@ -143,26 +143,98 @@ function Get-SteamGames {
     }
 }
 
+##### App Selector #####
+
+# Function to open Microsoft Edge
+function Open-Edge {
+    Start-Process "msedge"
+    Write-Host "Opening a browser"
+    Start-Sleep -Milliseconds 2000
+}
+
+# Function to open Spotify
+function Open-Spotify {
+    Start-Process "C:\Users\zebkl\AppData\Roaming\Spotify\spotify.exe"
+    Write-Host "Opening Spotify"
+    Start-Sleep -Milliseconds 2000
+}
+
+# Function to get installed Steam games
+function Get-SteamGames {
+    $steamPath = "$env:ProgramFiles (x86)\Steam\steamapps\common"
+    if (Test-Path $steamPath) {
+        Get-ChildItem -Path $steamPath -Directory |
+            Where-Object { $_.Name -ne "Steamworks Shared" } |
+            Select-Object -ExpandProperty Name
+    } else {
+        Write-Host "Steam is not installed or the games folder was not found." -ForegroundColor Red
+        return $null
+    }
+}
+
+# Function to watch a video
+function Watch-Video {
+    $videoPath = Join-Path -Path (Get-Location) -ChildPath "videos"
+    
+    if (Test-Path $videoPath) {
+        while ($true) {
+            $videos = Get-ChildItem -Path $videoPath -File |
+                Select-Object -ExpandProperty Name
+
+            if ($videos.Count -eq 0) {
+                Write-Host "No videos found in the 'videos' folder." -ForegroundColor Yellow
+                return
+            }
+
+            Write-Host "Available videos:" -ForegroundColor Yellow
+            for ($i = 0; $i -lt $videos.Count; $i++) {
+                Write-Host "$($i + 1). $($videos[$i])"
+            }
+
+            $videoSelection = Read-Host "Please enter the number of the video you want to watch (1-$($videos.Count)), or 'q' to return to the main menu"
+            
+            if ($videoSelection.ToLower() -eq 'q') {
+                Write-Host "Returning to main menu..." -ForegroundColor Cyan
+                break
+            }
+            
+            if ($videoSelection -match '^\d+$' -and [int]$videoSelection -ge 1 -and [int]$videoSelection -le $videos.Count) {
+                $selectedVideo = $videos[[int]$videoSelection - 1]
+                $videoFilePath = Join-Path -Path $videoPath -ChildPath $selectedVideo
+                Start-Process -FilePath $videoFilePath
+                Write-Host "Playing $selectedVideo"
+                Start-Sleep -Milliseconds 2000
+            } else {
+                Write-Host "Invalid selection. Please enter a number between 1 and $($videos.Count), or 'q' to return to the main menu." -ForegroundColor Red
+            }
+        }
+    } else {
+        Write-Host "'videos' folder was not found." -ForegroundColor Red
+    }
+}
+
+
 [System.Console]::Clear()
 Write-Host "Application Selector" -BackgroundColor Black -ForegroundColor Magenta
 Write-Host "NOTICE: Some of these applications require a persistent connection to the internet. Navigate to the system settings to search for available connections" -ForegroundColor DarkYellow
+
 while ($true) {
     # Prompt user for action
-    $action = Read-Host "Please choose how to proceed: (browse | listen | play | quit)" 
+    $action = Read-Host "Please choose how to proceed: (b for browse, m for music, g for games, w for watch, q for quit)" 
 
-    if ($action.ToLower() -eq "quit") {
+    if ($action.ToLower() -eq "q") {
         Write-Host "Exiting the program. To restart, enter '.\startup.ps1'" -ForegroundColor Cyan
         break
     }
 
     switch ($action.ToLower()) {
-        "browse" {
+        "b" {
             Open-Edge
         }
-        "listen" {
+        "m" {
             Open-Spotify
         }
-        "play" {
+        "g" {
             $games = Get-SteamGames
             if ($games) {
                 $steamGameIDs = @{ 
@@ -198,8 +270,11 @@ while ($true) {
                 }
             }
         }
+        "w" {
+            Watch-Video
+        }
         default {
-            Write-Host "Invalid choice. Please enter 'Browse', 'Listen', or 'Play'." -ForegroundColor Red
+            Write-Host "Invalid choice. Please enter 'b', 'm', 'g', 'w', or 'q'." -ForegroundColor Red
         }
     }
 }
