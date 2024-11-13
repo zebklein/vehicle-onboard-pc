@@ -19,7 +19,7 @@ function Show-Loading {
         Write-Host "`r[$progressBar] $progress% Complete" -NoNewline
         
         # Random delay between 50ms and 200ms
-        Start-Sleep -Milliseconds (Get-Random -Minimum 1 -Maximum 100)
+        Start-Sleep -Milliseconds (Get-Random -Minimum 1 -Maximum 50)
     }
     Write-Host "`n"  # Move to the next line
 }
@@ -110,27 +110,51 @@ function Show-SystemInfo {
 }
 
 # Call the function to display information
-Show-SystemInfo
+# Show-SystemInfo
 
 
 
 ##### App Selector #####
 
-# Function to open Microsoft Edge
+# Title printer
+# Prints the following ASCII art:
+# ██████╗  █████╗      ██╗███████╗██████╗  ██████╗ 
+# ██╔══██╗██╔══██╗     ██║██╔════╝██╔══██╗██╔═══██╗
+# ██████╔╝███████║     ██║█████╗  ██████╔╝██║   ██║
+# ██╔═══╝ ██╔══██║██   ██║██╔══╝  ██╔══██╗██║   ██║
+# ██║     ██║  ██║╚█████╔╝███████╗██║  ██║╚██████╔╝
+# ╚═╝     ╚═╝  ╚═╝ ╚════╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝ 
+
+function Write-AsciiTitle {
+    $title = @"
+$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2557)  $([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2557)      $([char]0x2588)$([char]0x2588)$([char]0x2557)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2557)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2557)  $([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2557)
+$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x2588)$([char]0x2588)$([char]0x2557)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x2588)$([char]0x2588)$([char]0x2557)     $([char]0x2588)$([char]0x2588)$([char]0x2551)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x255D)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x2588)$([char]0x2588)$([char]0x2557)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x2588)$([char]0x2588)$([char]0x2557)
+$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x255D)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2551)     $([char]0x2588)$([char]0x2588)$([char]0x2551)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2557)  $([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x255D)$([char]0x2588)$([char]0x2588)$([char]0x2551)   $([char]0x2588)$([char]0x2588)$([char]0x2551)
+$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x255D) $([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x2588)$([char]0x2588)$([char]0x2551)$([char]0x2588)$([char]0x2588)   $([char]0x2588)$([char]0x2588)$([char]0x2551)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x255D)  $([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x2550)$([char]0x2550)$([char]0x2588)$([char]0x2588)$([char]0x2557)$([char]0x2588)$([char]0x2588)$([char]0x2551)   $([char]0x2588)$([char]0x2588)$([char]0x2551)
+$([char]0x2588)$([char]0x2588)$([char]0x2551)     $([char]0x2588)$([char]0x2588)$([char]0x2551)  $([char]0x2588)$([char]0x2588)$([char]0x2551)$([char]0x255A)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x255D)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2557)$([char]0x2588)$([char]0x2588)$([char]0x2551)  $([char]0x2588)$([char]0x2588)$([char]0x2551)$([char]0x255A)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2588)$([char]0x2554)$([char]0x255D)
+$([char]0x255A)$([char]0x2550)$([char]0x255D)     $([char]0x255A)$([char]0x2550)$([char]0x255D)  $([char]0x255A)$([char]0x2550)$([char]0x255D) $([char]0x255A)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x255D) $([char]0x255A)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x255D)$([char]0x255A)$([char]0x2550)$([char]0x255D)  $([char]0x255A)$([char]0x2550)$([char]0x255D) $([char]0x255A)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x2550)$([char]0x255D) 
+"@
+    Write-Host $title -ForegroundColor Cyan
+    
+}
+
+##### App Selector #####
+
+# Open Microsoft Edge
 function Open-Edge {
     Start-Process "msedge"
     Write-Host "Opening a browser"
     Start-Sleep -Milliseconds 2000
 }
 
-# Function to open Spotify
+# Open Spotify
 function Open-Spotify {
     Start-Process "C:\Users\zebkl\AppData\Roaming\Spotify\spotify.exe"
     Write-Host "Opening Spotify"
     Start-Sleep -Milliseconds 2000
 }
 
-# Function to get installed Steam games
+# Get installed Steam games
 function Get-SteamGames {
     $steamPath = "$env:ProgramFiles (x86)\Steam\steamapps\common"
     if (Test-Path $steamPath) {
@@ -143,43 +167,14 @@ function Get-SteamGames {
     }
 }
 
-##### App Selector #####
-
-# Function to open Microsoft Edge
-function Open-Edge {
-    Start-Process "msedge"
-    Write-Host "Opening a browser"
-    Start-Sleep -Milliseconds 2000
-}
-
-# Function to open Spotify
-function Open-Spotify {
-    Start-Process "C:\Users\zebkl\AppData\Roaming\Spotify\spotify.exe"
-    Write-Host "Opening Spotify"
-    Start-Sleep -Milliseconds 2000
-}
-
-# Function to get installed Steam games
-function Get-SteamGames {
-    $steamPath = "$env:ProgramFiles (x86)\Steam\steamapps\common"
-    if (Test-Path $steamPath) {
-        Get-ChildItem -Path $steamPath -Directory |
-            Where-Object { $_.Name -ne "Steamworks Shared" } |
-            Select-Object -ExpandProperty Name
-    } else {
-        Write-Host "Steam is not installed or the games folder was not found." -ForegroundColor Red
-        return $null
-    }
-}
-
-# Function to watch a video
+# Load a video
 function Watch-Video {
     $videoPath = Join-Path -Path (Get-Location) -ChildPath "videos"
     
     if (Test-Path $videoPath) {
         while ($true) {
-            $videos = Get-ChildItem -Path $videoPath -File |
-                Select-Object -ExpandProperty Name
+            # Get list of video files without extensions
+            $videos = Get-ChildItem -Path $videoPath -File | ForEach-Object { $_.BaseName }
 
             if ($videos.Count -eq 0) {
                 Write-Host "No videos found in the 'videos' folder." -ForegroundColor Yellow
@@ -199,7 +194,7 @@ function Watch-Video {
             }
             
             if ($videoSelection -match '^\d+$' -and [int]$videoSelection -ge 1 -and [int]$videoSelection -le $videos.Count) {
-                $selectedVideo = $videos[[int]$videoSelection - 1]
+                $selectedVideo = $videos[[int]$videoSelection - 1] + ".mp4"
                 $videoFilePath = Join-Path -Path $videoPath -ChildPath $selectedVideo
                 Start-Process -FilePath $videoFilePath
                 Write-Host "Playing $selectedVideo"
@@ -213,8 +208,10 @@ function Watch-Video {
     }
 }
 
-
+# Main
 [System.Console]::Clear()
+Write-AsciiTitle
+
 Write-Host "Application Selector" -BackgroundColor Black -ForegroundColor Magenta
 Write-Host "NOTICE: Some of these applications require a persistent connection to the internet. Navigate to the system settings to search for available connections" -ForegroundColor DarkYellow
 
